@@ -1,0 +1,10 @@
+{
+  "name": "cpt-clock",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Chrome extension that tells CPT students exactly when to clock out to stay under 20 hours a week.",
+  "type": "module",
+  "scripts": {
+    "test": "TZ=America/Chicago node --test tests/*.test.js"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "manifest_version": 3,
+  "name": "CPT Clock",
+  "version": "0.1.0",
+  "description": "Tells you exactly when to clock out to stay under your CPT weekly hour limit.",
+  "permissions": ["storage", "alarms", "notifications"],
+  "background": { "service_worker": "background.js", "type": "module" },
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" }
+  },
+  "icons": { "16": "icons/icon16.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
+  "options_page": "options/options.html",
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*.myworkday.com/*",
+        "https://*.workday.com/*",
+        "https://*.adp.com/*",
+        "https://*.mykronos.com/*",
+        "https://*.ultipro.com/*",
+        "https://*.ukg.com/*"
+      ],
+      "js": ["content/detect.js"],
+      "all_frames": true,
+      "run_at": "document_idle"
+    }
+  ]
+}

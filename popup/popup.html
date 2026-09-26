@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>CPT Clock</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header>
+    <h1>CPT Clock</h1>
+    <a id="settings" href="#" title="Settings">Settings</a>
+  </header>
+
+  <section class="hero">
+    <p class="label" id="heroLabel">Not clocked in</p>
+    <p class="big" id="heroTime">–</p>
+    <p class="sub" id="heroSub"></p>
+  </section>
+
+  <section class="week">
+    <div class="bar"><div class="fill" id="fill"></div><div class="target" id="targetMark"></div></div>
+    <p id="weekText"></p>
+  </section>
+
+  <section class="actions">
+    <button id="toggle" class="primary">Clock in</button>
+    <button id="iphone" disabled>Send to iPhone</button>
+  </section>
+
+  <details>
+    <summary>This week's shifts</summary>
+    <ul id="sessions"></ul>
+    <button id="add" class="link">+ Add a past shift</button>
+  </details>
+
+  <p class="note">A helper, not legal advice. Your employer's official timesheet is what counts.</p>
+  <script type="module" src="popup.js"></script>
+</body>
+</html>

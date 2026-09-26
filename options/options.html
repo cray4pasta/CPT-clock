@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>CPT Clock settings</title>
+  <style>
+    :root { --bg: #fff; --fg: #202124; --muted: #5f6368; --line: #dadce0; --accent: #1a73e8; }
+    @media (prefers-color-scheme: dark) { :root { --bg: #202124; --fg: #e8eaed; --muted: #9aa0a6; --line: #3c4043; --accent: #8ab4f8; } }
+    body { max-width: 520px; margin: 32px auto; padding: 0 16px; font: 14px/1.5 -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--fg); }
+    label { display: block; margin: 18px 0 4px; font-weight: 600; }
+    small { display: block; color: var(--muted); font-weight: 400; }
+    input, select { font: inherit; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: transparent; color: var(--fg); width: 100%; }
+    input[type=checkbox] { width: auto; margin-right: 6px; }
+    button { margin-top: 24px; font: inherit; padding: 8px 18px; border-radius: 6px; border: 0; background: var(--accent); color: var(--bg); font-weight: 600; cursor: pointer; }
+    #saved { margin-left: 10px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <h1>CPT Clock settings</h1>
+  <form id="form">
+    <label>Weekly hour limit
+      <small>20 for part-time CPT during the academic term.</small>
+      <input type="number" name="weeklyLimitHours" min="0.1" step="0.1" required>
+    </label>
+    <label>Safety buffer (minutes)
+      <small>Aim to finish this many minutes under the limit, to cover rounding and slow clock-outs.</small>
+      <input type="number" name="bufferMinutes" min="0" step="1" required>
+    </label>
+    <label>Week starts on
+      <small>Match your employer's timesheet week.</small>
+      <select name="weekStartDay">
+        <option value="0">Sunday</option><option value="1">Monday</option><option value="6">Saturday</option>
+      </select>
+    </label>
+    <label>Reminders (minutes before clock-out, comma-separated)
+      <input type="text" name="leadMinutes" pattern="\s*\d+(\s*,\s*\d+)*\s*" required>
+    </label>
+    <label>iPhone Shortcut name
+      <small>The Mac Shortcut that creates the iCloud Reminder. See the README for setup.</small>
+      <input type="text" name="shortcutName" required>
+    </label>
+    <label><input type="checkbox" name="autoSendToIphone">Send to iPhone automatically when I clock in</label>
+    <button type="submit">Save</button><span id="saved"></span>
+  </form>
+  <script type="module" src="options.js"></script>
+</body>
+</html>
