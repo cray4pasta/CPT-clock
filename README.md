@@ -8,8 +8,11 @@ the most hours without going over. Then it reminds you on your **Mac** and your 
 
 ## What it does
 
-- **Detects clock-in/out** when you click *Check In / Check Out*, *Clock In / Clock Out* or *Punch In / Punch Out*
-  on **Workday**, **ADP** or **UKG (Kronos)** in Chrome. A small toast confirms it, with **Undo** in case you cancelled.
+- **Detects clock-in/out on Workday, ADP and UKG (Kronos)** in Chrome, in two steps:
+  1. Clicking *Check In / Clock In / Punch In* (or *…Out*) only **arms** detection. Nothing is logged yet.
+  2. The shift is logged once the site shows its **success message** (e.g. "You checked in at 9:02 AM"),
+     using the time in that message. Clicking *Cancel* logs nothing. If no confirmation appears within 3 minutes,
+     a prompt asks whether the punch went through (**Log it** / **Ignore**). Every logged punch has **Undo**.
 - **Manual clock in/out** from the popup, for when you clock in on your phone or a kiosk.
 - **Calculates your clock-out time:** `clock-in + (20h − hours already worked this week − safety buffer)`.
   The default buffer is 10 minutes, to cover rounding and slow clock-outs.
@@ -36,7 +39,8 @@ Everything stays on your computer (`chrome.storage.local`). Nothing is sent anyw
 - Its weekly total is **its own log**, not your employer's official record. If they differ, fix the shifts in the popup.
 - Chrome must be running for Mac notifications. The iPhone reminder works even if it isn't.
 - Your employer's timesheet week might start on a different day, and it might be in a different time zone. Check **Settings**.
-- Workday/ADP/UKG button labels vary by employer. If a click isn't detected, open an issue with the exact button text.
+- Workday/ADP/UKG wording varies by employer. The button labels and success messages CPT Clock looks for are in
+  [`lib/patterns.js`](lib/patterns.js). If a punch isn't detected, note the exact button text and success message and add them there.
 
 > **Disclaimer:** CPT Clock is a personal helper, not legal or immigration advice. Your DSO and your
 > employer's official time records are what count. Keep a margin.
@@ -44,15 +48,16 @@ Everything stays on your computer (`chrome.storage.local`). Nothing is sent anyw
 ## Development
 
 ```sh
-npm test                 # unit tests for the hour math (lib/hours.js)
+npm test                 # unit tests for the hour math and detection patterns
 ```
 
 - `lib/hours.js`: pure time calculations (week boundaries, totals, clock-out time)
 - `background.js`: session log, alarms, notifications, iPhone hand-off
-- `content/detect.js`: clock-in/out button detection on timekeeping sites
+- `lib/patterns.js`: button labels, success-message patterns, and time parsing for detection
+- `content/detect.js`: arms on a Check In/Out click and logs once the site confirms
 - `popup/`, `options/`: UI
-- `test-pages/fake-workday.html`: local page for trying detection. Serve it with `python3 -m http.server` and
-  add `http://localhost/*` to the content-script `matches` while testing.
+- `test-pages/fake-workday.html`: Workday-like page (dialog → OK → success toast) for trying detection. Serve it with
+  `python3 -m http.server`, add `http://localhost/*` to the content-script `matches` while testing, and use `?fast` / `?silent`.
 
 ## Roadmap
 

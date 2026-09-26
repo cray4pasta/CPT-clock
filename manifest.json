@@ -21,7 +21,7 @@
         "https://*.ultipro.com/*",
         "https://*.ukg.com/*"
       ],
-      "js": ["content/detect.js"],
+      "js": ["lib/patterns.js", "content/detect.js"],
       "all_frames": true,
       "run_at": "document_idle"
     }

@@ -1,12 +1,48 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><title>Fake Workday time clock</title></head>
-<body style="font-family: system-ui; padding: 40px">
+<head>
+  <meta charset="utf-8">
+  <title>Fake Workday time clock</title>
+  <style>
+    body { font-family: system-ui; padding: 40px; }
+    dialog { border: 1px solid #ccc; border-radius: 8px; padding: 20px; }
+    #toast { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); background: #0b6e4f; color: #fff; padding: 10px 16px; border-radius: 6px; }
+  </style>
+</head>
+<body>
   <h1>Time Clock (test page)</h1>
-  <p>Mimics Workday's time clock buttons so the content script can be tested locally.</p>
+  <p>Behaves like Workday: Check In / Check Out open a dialog, and OK shows a success toast after 1 s.
+     Add <code>?silent</code> to never show the toast, and <code>?fast</code> to shorten CPT Clock's confirmation wait to 4 s.</p>
   <button data-automation-id="checkInButton"><span>Check In</span></button>
   <button data-automation-id="checkOutButton"><span>Check Out</span></button>
-  <div role="button" tabindex="0">Clock In</div>
   <button>Check in history</button>
+
+  <dialog id="dlg">
+    <p id="dlgTitle"></p>
+    <label>Time type <select><option>Regular</option></select></label>
+    <p><button id="ok">OK</button> <button id="cancel">Cancel</button></p>
+  </dialog>
+
+  <script>
+    if (location.search.includes('fast')) document.documentElement.dataset.cptConfirmTimeoutMs = '4000';
+    let mode = 'in';
+    const dlg = document.getElementById('dlg');
+    const open = (m) => { mode = m; document.getElementById('dlgTitle').textContent = m === 'in' ? 'Check In' : 'Check Out'; dlg.showModal(); };
+    document.querySelector('[data-automation-id=checkInButton]').onclick = () => open('in');
+    document.querySelector('[data-automation-id=checkOutButton]').onclick = () => open('out');
+    document.getElementById('cancel').onclick = () => dlg.close();
+    document.getElementById('ok').onclick = () => {
+      dlg.close();
+      if (location.search.includes('silent')) return;
+      setTimeout(() => {
+        const t = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+        const el = document.createElement('div');
+        el.id = 'toast';
+        el.innerHTML = `<span>You checked ${mode} at ${t}</span>`;
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 4000);
+      }, 1000);
+    };
+  </script>
 </body>
 </html>
